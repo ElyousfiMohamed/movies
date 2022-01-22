@@ -1,44 +1,85 @@
 <script>
-  import logo from './assets/svelte.png';
-  import Counter from './lib/Counter.svelte';
-  import {onMount} from 'svelte';
+  import logo from "./assets/svelte.png";
+  import Counter from "./lib/Counter.svelte";
+  import { onMount } from "svelte";
 
-  let movies = []
-  let pagination = {}
-  onMount(async () => {
+  let movies = [];
+  let pagination = {};
+
+  async function getMovies() {
     await fetch(`http://localhost:4000/movies`)
-        .then(r => r.json())
-        .then(data => {
-            movies : data.data
-            pagination : data.pagination
-        });})
+      .then((r) => r.json())
+      .then((data) => {
+        movies = data.data;
+        pagination = data.pagination;
+        console.log(movies);
+      });
+  }
+
+  onMount(async () => {
+    getMovies();
+  });
 </script>
 
-<main>
-  <img src={logo} alt="Svelte Logo" />
-  <h1>Hello world!</h1>
+<head>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+</head>
+<main class="container">
+  <center><nav class="navbar navbar-expand-lg navbar-light bg-light mb-5">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+        <a class="navbar-brand" href="/movies"><i class="fas fa-film"></i>&nbsp; Movies</a>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <a class="navbar-brand" href="https://github.com/ElyousfiMohamed/movies" target="_blank"><i class="fab fa-github"></i>&nbsp; GitHub</a>
+          <a class="navbar-brand" href="#"><i class="fab fa-youtube" target="_blank"></i>&nbsp; YouTube</a>
+        </ul>
+        <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-dark" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </nav></center>
 
-  <Counter />
-
-  <p>
-    Visit <a href="https://svelte.dev">svelte.dev</a> to learn how to build Svelte
-    apps.
-  </p>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme">SvelteKit</a> for
-    the officially supported framework, also powered by Vite!
-  </p>
+  <div class="row">
+  {#each movies as movie}
+  <div class="card col-4 m-1" style="width: 18rem;">
+    <img src="{movie.poster}" class="card-img-top" alt="..." />
+    <div class="card-body">
+      <h6 class="card-title">Title : {movie.title}</h6>
+      <h6 class="card-title">Year : {movie.year}</h6>
+      <h6>Genres : 
+        {#each movie.genres as genre}
+          <span class="card-text">{genre} </span>
+        {/each}</h6>
+    </div>
+  </div>
+  {/each}
+</div>
 </main>
 
 <style>
   :root {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   }
 
+  .row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  nav {
+    border-radius: 5px;
+    width: 95%;
+  }
+  
   main {
-    text-align: center;
+    background-color: #333333;
     padding: 1em;
     margin: 0 auto;
   }
