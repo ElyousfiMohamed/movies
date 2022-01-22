@@ -5,6 +5,7 @@
 
   let movies = [];
   let pagination = {};
+  let skip = 0;
 
   async function getMovies() {
     await fetch(`http://localhost:4000/movies`)
@@ -12,7 +13,26 @@
       .then((data) => {
         movies = data.data;
         pagination = data.pagination;
-        console.log(movies);
+      });
+  }
+
+  async function getElements_S() {
+    skip += 10
+    await fetch("http://localhost:4000/movies?take=10&skip="+skip)
+      .then((r) => r.json())
+      .then((data) => {
+        movies = data.data;
+        pagination = data.pagination;
+      });
+  }
+
+  async function getElements_P() {
+    skip -= 10
+    await fetch("http://localhost:4000/movies?take=10&skip="+skip)
+      .then((r) => r.json())
+      .then((data) => {
+        movies = data.data;
+        pagination = data.pagination;
       });
   }
 
@@ -59,6 +79,12 @@
   </div>
   {/each}
 </div>
+<footer id="sticky-footer" class="flex-shrink-0 py-4 bg-dark text-white-50 mt-5">
+  <div class="container text-center">
+    <button type="button" class="btn btn-light" id="btn-p" on:click={getElements_P}><i class="fas fa-backward"></i> Page Précedente</button>
+    <button type="button" class="btn btn-light" id="btn-s" on:click={getElements_S}>Page Suivante <i class="fas fa-forward"></i></button>
+  </div>
+</footer>
 </main>
 
 <style>
@@ -78,6 +104,15 @@
     width: 95%;
   }
   
+  .btn {
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+
+  footer {
+    background-color: #333333 !important;
+  }
+
   main {
     background-color: #333333;
     padding: 1em;
