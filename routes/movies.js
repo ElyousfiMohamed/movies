@@ -13,7 +13,7 @@ router.get("/:take?/:skip?", async function (req, res, next) {
   res.send({
     data: movies,
     pagination: {
-      count: movies.length,
+      count: await prisma.movies.count(),
       take: limit,
       skip: offset,
     },

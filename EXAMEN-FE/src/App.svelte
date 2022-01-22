@@ -1,10 +1,24 @@
 <script>
-  import logo from './assets/svelte.png'
+  import logo from './assets/svelte.png';
+  import Counter from './lib/Counter.svelte';
+  import {onMount} from 'svelte';
+
+  let movies = []
+  let pagination = {}
+  onMount(async () => {
+    await fetch(`http://localhost:4000/movies`)
+        .then(r => r.json())
+        .then(data => {
+            movies : data.data
+            pagination : data.pagination
+        });})
 </script>
 
 <main>
   <img src={logo} alt="Svelte Logo" />
   <h1>Hello world!</h1>
+
+  <Counter />
 
   <p>
     Visit <a href="https://svelte.dev">svelte.dev</a> to learn how to build Svelte
